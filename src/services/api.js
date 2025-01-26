@@ -1,7 +1,6 @@
-// require("dotenv").config();
 
-const API_KEY = env.MOVIE_DB_API_KEY;
-console.log(API_KEY);
+const API_KEY = import.meta.env.VITE_MOVIE_DB_API_KEY;
+console.log("VITE_MOVIE_DB_API_KEY:", import.meta.env.VITE_MOVIE_DB_API_KEY);
 
 const BASE_URL = "https://api.themoviedb.org/3"
 
