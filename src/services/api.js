@@ -1,4 +1,6 @@
-const API_KEY = "00c1c576fc3826f25ca4c6dfa0eab63a"
+require("dotenv").config();
+
+const API_KEY = process.env.movie_db_api_key;
 const BASE_URL = "https://api.themoviedb.org/3"
 
 export const getPopularMovies = async () => {
