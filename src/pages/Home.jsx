@@ -1,9 +1,9 @@
-import MovieCard from "../components/MovieCard";
 import { useState, useEffect } from "react";
-import { searchMovies, getPopularMovies } from "../services/api";
-import "../css/Home.css";
+import MovieCard from "../components/movie/MovieCard";
+import { tmdbApi } from "../api";
+import "../styles/Home.css";
 
-function Home() {
+const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
@@ -12,11 +12,13 @@ function Home() {
   useEffect(() => {
     const loadPopularMovies = async () => {
       try {
-        const popularMovies = await getPopularMovies();
+        setLoading(true);
+        const popularMovies = await tmdbApi.getPopularMovies();
         setMovies(popularMovies);
+        setError(null);
       } catch (err) {
-        console.log(err);
-        setError("Failed to load movies...");
+        console.error("Failed to load popular movies:", err);
+        setError("Failed to load movies. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -27,19 +29,18 @@ function Home() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return
-    if (loading) return
+    if (!searchQuery.trim()) return;
 
-    setLoading(true)
     try {
-        const searchResults = await searchMovies(searchQuery)
-        setMovies(searchResults)
-        setError(null)
+      setLoading(true);
+      const searchResults = await tmdbApi.searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
     } catch (err) {
-        console.log(err)
-        setError("Failed to search movies...")
+      console.error("Failed to search movies:", err);
+      setError("Failed to search movies. Please try again later.");
     } finally {
-        setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -53,24 +54,35 @@ function Home() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button type="submit" className="search-button">
-          Search
+        <button type="submit" className="search-button" disabled={loading}>
+          {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-        {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message">{error}</div>}
 
       {loading ? (
-        <div className="loading">Loading...</div>
+        <div className="loading">Loading movies...</div>
       ) : (
-        <div className="movies-grid">
-          {movies.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
-        </div>
+        <>
+          <h2 className="section-title">
+            {searchQuery ? "Search Results" : "Popular Movies"}
+          </h2>
+          <div className="movies-grid">
+            {movies.length > 0 ? (
+              movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+            ) : (
+              <p className="no-movies">
+                {searchQuery
+                  ? "No movies found for your search. Try something else!"
+                  : "No movies available right now."}
+              </p>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
-}
+};
 
 export default Home;
