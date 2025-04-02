@@ -1,29 +1,37 @@
-import "../css/Favorites.css";
+import { Link } from "react-router-dom";
 import { useMovieContext } from "../contexts/MovieContext";
-import MovieCard from "../components/MovieCard";
+import MovieCard from "../components/movie/MovieCard";
+import "../styles/Favorites.css";
 
-function Favorites() {
-  const { favorites } = useMovieContext();
+const Favorites = () => {
+  const { favorites, loading } = useMovieContext();
 
-  if (favorites) {
-    return (
-      <div className="favorites">
-        <h2>Your Favorites</h2>
-        <div className="movies-grid">
-          {favorites.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
-        </div>
-      </div>
-    );
+  if (loading) {
+    return <div className="loading">Loading favorites...</div>;
   }
 
   return (
-    <div className="favorites-empty">
-      <h2>No Favorite Movies Yet</h2>
-      <p>Start adding movies to your favorites and they will appear here!</p>
+    <div className="favorites-page">
+      <div className="page-header">
+        <h1>Your Favorite Movies</h1>
+      </div>
+
+      {favorites.length === 0 ? (
+        <div className="empty-favorites">
+          <p>You haven't added any favorites yet.</p>
+          <Link to="/" className="browse-movies-btn">
+            Browse Movies
+          </Link>
+        </div>
+      ) : (
+        <div className="movies-grid">
+          {favorites.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default Favorites;
