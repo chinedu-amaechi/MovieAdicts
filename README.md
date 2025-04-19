@@ -87,10 +87,5 @@ The application is deployed on Vercel's global CDN for optimal performance:
 - **Production URL**: [movie-addicts.vercel.app](https://movie-addicts.vercel.app)
 - **CI/CD**: Automatic deployment on pushes to the main branch
 
-## License
-
-MIT
-
----
 
 *This project showcases modern frontend development practices within the context of an engaging movie discovery platform.*
