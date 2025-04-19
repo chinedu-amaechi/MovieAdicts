@@ -88,4 +88,5 @@ The application is deployed on Vercel's global CDN for optimal performance:
 - **CI/CD**: Automatic deployment on pushes to the main branch
 
 
+---
 *This project showcases modern frontend development practices within the context of an engaging movie discovery platform.*
